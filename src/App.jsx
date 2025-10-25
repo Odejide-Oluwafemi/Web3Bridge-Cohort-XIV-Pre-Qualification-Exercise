@@ -21,9 +21,16 @@ export default function App() {
     }
   }
 
+  function resetQuiz() {
+    setCurrentQuestionIndex(0);
+    setQuizOver(false);
+  }
+
   return <>
     <Header/>
 
-    {quizOver ? <Result questionsJson={QuestionsJson} userAnswers={userAnswers} /> : <QuizCard question={QuestionsJson[currentQuestionIndex]} onSelectOption={optionSelected}/>}
+    <main>
+      {quizOver ? <Result questionsJson={QuestionsJson} userAnswers={userAnswers} resetQuiz={resetQuiz}/> : <QuizCard question={QuestionsJson[currentQuestionIndex]} onSelectOption={optionSelected}/>}
+    </main>
   </>
 }
