@@ -24,6 +24,7 @@ export default function App() {
   function resetQuiz() {
     setCurrentQuestionIndex(0);
     setQuizOver(false);
+    setUserAnswers([]);
   }
 
   return <>
