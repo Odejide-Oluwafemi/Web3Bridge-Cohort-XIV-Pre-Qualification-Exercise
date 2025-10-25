@@ -1,21 +1,30 @@
 import { useEffect, useState } from "react";
 
 export default function Result({ questionsJson, userAnswers, resetQuiz }) {
+  const LAST_SCORE_STORAGE_VARIABLE = "lastScore";
+  const HIGH_SCORE_STORAGE_VARIABLE = "highScore";
+  
   const correctAnswers = questionsJson.filter(
     (question, index) => question.answer === userAnswers[index]
   ).length;
 
    const [lastScore, setLastScore] = useState(correctAnswers);
-   const storageVariable = "lastScore";
+   const [highScore, setHighScore] = useState(0);
 
   useEffect(() => {
-    const storedScore = JSON.parse(localStorage.getItem(storageVariable)) || [];
+    const storedScore = JSON.parse(localStorage.getItem(LAST_SCORE_STORAGE_VARIABLE)) || 0;
+    const storedHighScore = JSON.parse(localStorage.getItem(HIGH_SCORE_STORAGE_VARIABLE)) || 0;
+    
     setLastScore(storedScore);
+    setHighScore(storedHighScore);
   }, []);
 
   useEffect(() => {
-    setLastScore(correctAnswers);
-    localStorage.setItem(storageVariable, JSON.stringify(lastScore));
+    if (correctAnswers > highScore)
+      {
+        setHighScore(correctAnswers);
+        localStorage.setItem(HIGH_SCORE_STORAGE_VARIABLE, JSON.stringify(correctAnswers.toString()));
+    }
   }, [correctAnswers]);
 
   return (
@@ -25,13 +34,22 @@ export default function Result({ questionsJson, userAnswers, resetQuiz }) {
         You answered {correctAnswers} out of {questionsJson.length} questions
         correctly.
       </p>
-      <button onClick={resetQuiz}>Retry</button>
+      <button onClick={() => {
+        setLastScore(correctAnswers);
+    localStorage.setItem(LAST_SCORE_STORAGE_VARIABLE, JSON.stringify(correctAnswers.toString()));
+    
+
+        resetQuiz();
+      }}>Retry</button>
 
       <div className="last-score">
       {lastScore === null ? (
         <p>No scores yet. Complete your first quiz!</p>
       ) : (
-        <p>Last Score: <strong>{lastScore}</strong></p>
+        <>
+       {lastScore > 0 && <p>Last Score: <strong>{lastScore}</strong></p>}
+        <p>High Score: <strong>{highScore}</strong></p>
+        </>
       )}
     </div>
     </div>
