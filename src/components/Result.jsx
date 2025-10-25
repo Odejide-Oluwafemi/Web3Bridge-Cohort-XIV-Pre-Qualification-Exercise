@@ -27,20 +27,13 @@ export default function Result({ questionsJson, userAnswers, resetQuiz }) {
       </p>
       <button onClick={resetQuiz}>Retry</button>
 
-      <Leaderboard lastScore={lastScore}/>
-    </div>
-  );
-}
-
-function Leaderboard({ lastScore }) {
-  return (
-    <div className="leaderboard">
-      <h3>Score History</h3>
+      <div className="last-score">
       {lastScore === null ? (
         <p>No scores yet. Complete your first quiz!</p>
       ) : (
         <p>Last Score: <strong>{lastScore}</strong></p>
       )}
+    </div>
     </div>
   );
 }
